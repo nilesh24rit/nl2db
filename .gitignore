@@ -1,0 +1,26 @@
+# Maven target directory
+target/
+
+# IDE-generated files
+*.swp
+*.swo
+*.suo
+.idea/
+*.iws
+*.iml
+
+# Local environment files
+.env
+
+# Logs
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Temporary build output
+.mvn/
+
+# Local secrets (never commit)
+secret*
