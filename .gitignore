@@ -1,26 +1,22 @@
-# Maven target directory
+# Java/Target
 target/
+/*.log
+/.metadata
 
-# IDE-generated files
-*.swp
-*.swo
-*.suo
+# IntelliJ
 .idea/
-*.iws
 *.iml
 
-# Local environment files
-.env
-
-# Logs
-*.log
-
-# OS-specific
+# Windows
 .DS_Store
 Thumbs.db
 
-# Temporary build output
-.mvn/
+# Maven
+*.repositories
+*.rmetadatas
 
-# Local secrets (never commit)
-secret*
+# Application specific
+build-output.txt
+compile-output.txt
+test-output.txt
+verify-output.txt
