@@ -6,7 +6,6 @@ spring:
   # No external dependencies required.
   # All configuration can be overridden via environment variables.
   # Redis is optionally available via NL2DB_REDIS_ environment variables
-spring:
   data:
     redis:
       host: ${NL2DB_REDIS_HOST:127.0.0.1}
