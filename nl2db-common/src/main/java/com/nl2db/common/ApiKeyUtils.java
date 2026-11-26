@@ -157,4 +157,20 @@ public final class ApiKeyUtils {
         byte[] bytes2 = secret2.getBytes(java.nio.charset.StandardCharsets.UTF_8);
         return java.util.Arrays.equals(bytes1, bytes2);
     }
+
+    /**
+     * Extracts the secret portion from an API key string.
+     * The secret is the part after the dot (.) in the format
+     * nl2db_live_<16-hex-prefix>.<44-char-base64url-secret>.
+     *
+     * @param apiKey the API key string
+     * @return the secret string, or null if the format is invalid
+     */
+    public static String getSecret(String apiKey) {
+        String[] parts = parseApiKey(apiKey);
+        if (parts == null) {
+            return null;
+        }
+        return parts[1];
+    }
 }
