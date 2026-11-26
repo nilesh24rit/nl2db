@@ -5,6 +5,9 @@ import com.nl2db.common.ApiKeyUtils;
 import com.nl2db.security.ApiKeyPrincipal;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.GrantedAuthority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -83,5 +86,19 @@ public class ApiKeyController {
                             null,
                             "invalid_format"));
         }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiKeyMeResponse> me() {
+        ApiKeyPrincipal principal = (ApiKeyPrincipal) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        return ResponseEntity.ok(new ApiKeyMeResponse(
+                principal.getApiKeyId(),
+                principal.getOrganizationId(),
+                principal.getAuthType(),
+                principal.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .toList()));
     }
 }
