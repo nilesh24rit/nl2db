@@ -131,4 +131,30 @@ public final class ApiKeyUtils {
         String base64 = Base64.getEncoder().withoutPadding().encodeToString(bytes);
         return base64.replace('+', '-').replace('/', '_');
     }
+
+    /**
+     * Compares two secret strings using constant-time comparison to prevent
+     * timing attacks.
+     * <p>
+     * Uses {@link java.util#Arrays#equals} which always iterates over the
+     * full length of the arrays regardless of early mismatches, providing
+     * protection against timing-based side-channel attacks.
+     *
+     * @param secret1 the first secret string (typically the provided API key secret)
+     * @param secret2 the second secret string (typically the stored hash-derived secret)
+     * @return {@code true} if the secrets are equal, {@code false} otherwise.
+     *         The comparison always takes the same amount of time regardless
+     *         of where the first difference occurs.
+     */
+    public static boolean constantTimeSecretCompare(String secret1, String secret2) {
+        if (secret1 == secret2) {
+            return true;
+        }
+        if (secret1 == null || secret2 == null) {
+            return false;
+        }
+        byte[] bytes1 = secret1.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        byte[] bytes2 = secret2.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        return java.util.Arrays.equals(bytes1, bytes2);
+    }
 }

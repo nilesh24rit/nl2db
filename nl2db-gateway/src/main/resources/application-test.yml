@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: nl2db-gateway-test
+  # Test profile - automated testing
+  # Deterministic and isolated configuration.
+  # No external dependencies required.
+  # All configuration can be overridden via environment variables.
+  # Redis is optionally available via NL2DB_REDIS_ environment variables
+spring:
+  data:
+    redis:
+      host: ${NL2DB_REDIS_HOST:127.0.0.1}
+      port: ${NL2DB_REDIS_PORT:6379}
+      password: ${NL2DB_REDIS_PASSWORD:}
+      database: ${NL2DB_REDIS_DATABASE:0}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info
+  # Restrict MongoDB health details - do not expose connection URIs or database names
+  mongodb:
+    uri:
+      enabled: false
+    database:
+      enabled: false
+# Kafka configured via NL2DB_KAFKA_BOOTSTRAP_SERVERS environment variable
+app:
+  kafka:
+    bootstrap-servers: ${NL2DB_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+  mongodb:
+    uri: ${NL2DB_MONGODB_URI:}
+    database: ${NL2DB_MONGODB_DATABASE:}

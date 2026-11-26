@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: nl2db-gateway-prod
+  # Production profile
+  # Mandatory configuration must be provided via environment variables or external config.
+  # Fail fast when mandatory settings are absent or invalid.
+  # Optional settings have documented defaults.
+  # All NL2DB_ environment variables are checked for required values.
+  # Redis connection settings via NL2DB_REDIS_ environment variables
+  data:
+    redis:
+      host: ${NL2DB_REDIS_HOST:}
+      port: ${NL2DB_REDIS_PORT:}
+      password: ${NL2DB_REDIS_PASSWORD:}
+      database: ${NL2DB_REDIS_DATABASE:0}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info
+  # Restrict MongoDB health details - do not expose connection URIs or database names
+  mongodb:
+    uri:
+      enabled: false
+    database:
+      enabled: false
+  # Actuator health details are restricted - see HealthConfig
+  # Prometheus endpoint is not exposed in this stage; the compatible registry
+  # dependency is not included. Add it in a later stage if needed.
+# Kafka: bootstrap servers must be provided via NL2DB_KAFKA_BOOTSTRAP_SERVERS in production
+app:
+  kafka:
+    bootstrap-servers: ${NL2DB_KAFKA_BOOTSTRAP_SERVERS}
+  mongodb:
+    uri: ${NL2DB_MONGODB_URI}
+    database: ${NL2DB_MONGODB_DATABASE}

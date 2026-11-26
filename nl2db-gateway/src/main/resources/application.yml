@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: nl2db-gateway
+  # Enable Bean Validation globally
+  main:
+    validation:
+      enabled: true
+  # Control-plane PostgreSQL datasource (managed by nl2db)
+  datasource:
+    url: ${NL2DB_DB_URL:jdbc:postgresql://localhost:5432/nl2db}
+    username: ${NL2DB_DB_USERNAME:sa}
+    password: ${NL2DB_DB_PASSWORD:}
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 10
+      idle-timeout: 60000
+      connection-timeout: 30000
+      leak-detection-threshold: 2000
+  # JPA / Hibernate configuration
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    defer-datasource-initialization: true
+  # Flyway database migrations
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    schemas: nl2db
+    validate-on-migrate: true
+    baseline-on-migrate: false
+  # Redis configuration
+  data:
+    redis:
+      host: ${NL2DB_REDIS_HOST:127.0.0.1}
+      port: ${NL2DB_REDIS_PORT:6379}
+      password: ${NL2DB_REDIS_PASSWORD:}
+      database: ${NL2DB_REDIS_DATABASE:0}
+  # Kafka configuration
+  kafka:
+    bootstrap-servers: ${NL2DB_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+  mongodb:
+    uri: ${NL2DB_MONGODB_URI:mongodb://localhost:27017}
+    database: ${NL2DB_MONGODB_DATABASE:nl2db}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info
+  # Restrict MongoDB health details - do not expose connection URIs or database names
+  mongodb:
+    uri:
+      enabled: false
+    database:
+      enabled: false

@@ -1,0 +1,2 @@
+$body = @{name="Spring-Boot-DB"; public=$true} | ConvertTo-Json
+Invoke-RestMethod -Method Post -Uri "https://api.github.com/user/repos" -Body $body -Headers @{"Accept"="application/vnd.github.v3+json"; "User-Agent"="powershell-script"}

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_FILE" value="${LOG_FILE:-${java.io.tmpdir}/nl2db-gateway.log}" />
+
+    <!-- Console appender with pattern that includes MDC correlation ID -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <withJMIServer>false</withJMIServer>
+
+        <encoder>
+            <pattern>
+                %d{ISO8601} [%thread] %-5level %logger{36} - %X{correlationId:-} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- JSON layout appender for production profile -->
+    <!-- Spring Boot will activate this appender based on spring.profiles.active -->
+    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <withJMIServer>false</withJMIServer>
+
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>
+                {"applicationName":"${spring.application.name}"}
+            </customFields>
+        </encoder>
+    </appender>
+
+    <!-- Actuator default appender -->
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+    <!-- Logger configurations -->
+    <logger name="org.springframework.boot" level="WARN" />
+    <logger name="org.springframework.security" level="WARN" />
+    <logger name="org.apache.kafka" level="WARN" />
+    <logger name="org.mongodb" level="WARN" />
+    <logger name="org.postgresql" level="WARN" />
+    <logger name="com.nl2db" level="INFO" />
+
+    <!-- Activate JSON appender for production profile -->
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="JSON_CONSOLE" />
+        </root>
+    </springProfile>
+
+    <!-- Activate pattern appender for local/test profiles -->
+    <springProfile name="local" name="test">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <!-- Default (no profile activated) -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <shutdownHook class="ch.qos.logback.core.hook.NeverShutdownHook" />
+</configuration>

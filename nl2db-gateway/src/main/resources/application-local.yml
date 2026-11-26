@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: nl2db-gateway
+  # Local profile - developer workstation
+  # Sensible defaults allow the gateway to start without requiring infrastructure.
+  # No external services required for basic operation.
+  # Configuration can be overridden via NL2DB_ environment variables.
+  # Redis is optionally available via NL2DB_REDIS_ environment variables
+spring:
+  data:
+    redis:
+      host: ${NL2DB_REDIS_HOST:127.0.0.1}
+      port: ${NL2DB_REDIS_PORT:6379}
+      password: ${NL2DB_REDIS_PASSWORD:}
+      database: ${NL2DB_REDIS_DATABASE:0}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info
+  # Restrict MongoDB health details - do not expose connection URIs or database names
+  mongodb:
+    uri:
+      enabled: false
+    database:
+      enabled: false
+  # Actuator health details are restricted - see HealthConfig
+  # Kafka is optional for local development; bootstrap servers default to localhost:9092
+app:
+  kafka:
+    bootstrap-servers: ${NL2DB_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+  mongodb:
+    uri: ${NL2DB_MONGODB_URI:mongodb://localhost:27017}
+    database: ${NL2DB_MONGODB_DATABASE:nl2db}

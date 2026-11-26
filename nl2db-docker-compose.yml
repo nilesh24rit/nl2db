@@ -1,0 +1,36 @@
+# Local MongoDB infrastructure for nl2db development
+# ---------------------------------------------------------
+# NOTE: This file is INTENTIONALLY NOT COMMITTED to the repository.
+# It is provided for local developer convenience only.
+# The final report contains creation instructions for this file.
+# ---------------------------------------------------------
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:8.0.3
+    container_name: nl2db-mongodb
+    # Bind to localhost only - do not expose publicly
+    ports:
+      - "127.0.0.1:27017:27017"
+    # Use a persistent named volume for data durability
+    volumes:
+      - nl2db-mongodb-data:/data/db
+    # Configure authentication
+    environment:
+      MONGO_INIT_ROOT_USERNAME: nl2db_user
+      MONGO_INIT_ROOT_PASSWORD: ${NL2DB_MONGODB_ROOT_PASSWORD}
+    # Health check using native MongoDB check
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ping:1})", "--quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Restart policy for development
+    restart: unless-stopped
+    # Do not enable replica-set or sharding by default
+    # Only enable if explicitly required for a specific development scenario
+
+volumes:
+  nl2db-mongodb-data:
+    driver: local
