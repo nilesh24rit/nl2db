@@ -20,3 +20,8 @@ build-output.txt
 compile-output.txt
 test-output.txt
 verify-output.txt
+
+# Local environment files and generated build/test output
+**/.env*
+/*.txt
+/*.log
